@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XW-WICX共享屏幕</title>
+    <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #b2d2eb;
+            background: #293742;
+            font-size: 18px;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #5dffa2; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .service-state {
+            text-align: center;
+        }
+
+        .service-state-text {
+            line-height: 80px;
+            font-size: 20px;
+        }
+
+
+        .warning {
+            display: flex;
+            align-items: center;
+            background-color: #ffc6cb;
+            color: #9e1623;
+            border: 1px solid #f5c6cb;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .warning i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            line-height: 40px;
+            position: absolute;
+            top: 40px;
+            left: 40px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo label {
+            font-weight: 900;
+            font-size: 20px;
+            margin: 0 20px;
+        }
+
+        #online-number {
+            font-weight: 600;
+            font-size: 24px;
+            margin-right: 5px;
+            color: #5dffa2;
+        }
+
+        #service-stop, #service-run {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="logo">
+        <img src="app.ico"> <label>XW-WICX</label>
+    </div>
+    <div class="service-state">
+        <div id="service-run">
+            <div>
+                <div class="loader"></div>
+            </div>
+            <div class="service-state-text">服务正在运行中，当前在线用：<b id="online-number">0</b>个</div>
+        </div>
+        <div id="service-stop" class="warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>服务已停止，请尝试重新启动！</span>
+        </div>
+    </div>
+</div>
+<script>
+    let serviceRun = document.getElementById('service-run')
+    let serviceStop = document.getElementById('service-stop')
+    let onlineNumber = document.getElementById('online-number')
+
+    checkServiceState()
+
+    async function checkServiceState() {
+        try {
+            const response = await fetch('http://127.0.0.1:3003/api/getRegCode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            if (!response.ok) {
+                serviceRun.style.display = 'none';
+                serviceStop.style.display = 'block';
+                checkServiceState()
+                return
+            }
+            serviceRun.style.display = 'block';
+            serviceStop.style.display = 'none';
+            const responseData = await response.json();
+            onlineNumber.innerText = responseData.onlineCount;
+            console.log('Server response:', responseData);
+            checkServiceState()
+
+        } catch (e) {
+            console.log(e)
+            serviceRun.style.display = 'none';
+            serviceStop.style.display = 'block';
+            checkServiceState()
+        }
+    }
+</script>
+</body>
+</html>

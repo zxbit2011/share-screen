@@ -1,0 +1,78 @@
+{
+  "name": "XW-WICX-KEYGEN",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "electron": "cross-env NODE_ENV=development  concurrently \"npm:start\" \"wait-on http://localhost:3000 && electron .\"",
+    "package-win": "react-scripts build && electron-builder build --win --x64 --publish never",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "concurrently": "^6.0.0",
+    "electron-builder": "^24.13.3",
+    "electron": "^30.1.0",
+    "wait-on": "^5.3.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "build": {
+    "appId": "com.wx-wicx.desk",
+    "productName": "XW-WICX注册码生成器",
+    "directories": {
+      "buildResources": "public",
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "public/**/*",
+      "src/**/*",
+      "build/",
+      "package.json"
+    ],
+    "extends": null,
+    "win": {
+      "icon": "public/favicon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "afterPack": "afterPack.js",
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "public/favicon.ico",
+      "uninstallerIcon": "public/favicon.ico",
+      "installerHeaderIcon": "public/favicon.ico"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "xw-wicx",
+  "version": "2.0.0",
+  "description": "XW-WICX共享屏幕",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development electron .",
+    "package-win": "electron-builder build --win --x64 --publish never",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.wx-wicx2.desk",
+    "productName": "XW-WICX共享屏幕",
+    "directories": {
+      "buildResources": "public",
+      "output": "dist"
+    },
+    "extraResources": [
+      "resources/vncproxy.exe"
+    ],
+    "asarUnpack": [
+      "resources/vncproxy.exe"
+    ],
+    "files": [
+      "index.js",
+      "app.ico",
+      "index.html",
+      "resources/vncproxy.exe",
+      "build/",
+      "package.json"
+    ],
+    "extends": null,
+    "win": {
+      "icon": "public/favicon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "afterPack": "afterPack.js",
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "public/favicon.ico",
+      "uninstallerIcon": "public/favicon.ico",
+      "installerHeaderIcon": "public/favicon.ico"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^31.1.0",
+    "electron-builder": "^24.13.3"
+  }
+}

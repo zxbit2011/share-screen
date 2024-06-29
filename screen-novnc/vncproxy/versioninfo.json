@@ -1,0 +1,18 @@
+{
+  "StringFileInfo": {
+    "Comments": "屏幕共享服务",
+    "CompanyName": "XW-WICX",
+    "FileDescription": "XW-WICX",
+    "FileVersion": "v2.0.0",
+    "InternalName": "XW-WICX",
+    "LegalCopyright": "Copyright (c) 2024 XW-WICX",
+    "LegalTrademarks": "",
+    "OriginalFilename": "XW-WICX",
+    "PrivateBuild": "",
+    "ProductName": "XW-WICX",
+    "ProductVersion": "v2.0.0",
+    "SpecialBuild": ""
+  },
+  "IconPath": "main.ico",
+  "ManifestPath": ""
+}
