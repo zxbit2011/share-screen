@@ -1,5 +1,5 @@
 # 会议室多屏共享屏幕程序
-> 开始使用：[安装手册](docs/安装手册.docx)
+> 开始使用：[安装使用手册](docs/安装手册.docx)
 ## 1、安装VNC
 `novnc-go\vncproxy\UltraVNC_1_3_60_X64_Setup.exe`
 
