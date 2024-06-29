@@ -1,7 +1,7 @@
 # 会议室多屏共享屏幕程序
 > 开始使用：[安装使用手册](docs/安装手册.docx)
 ## 1、安装VNC
-`novnc-go\vncproxy\UltraVNC_1_3_60_X64_Setup.exe`
+`docs/UltraVNC_1_3_60_X64_Setup.exe`
 
 ## 2、开发启动
 * 启动前端：screen-novnc/app-web
