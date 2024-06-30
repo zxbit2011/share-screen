@@ -176,7 +176,7 @@ export default (props): React.ReactNode => {
                     className="screen"
                     url={`ws://${host}/ws`}
                     // url={`ws://${host}/socket/ws`} // vite 运行测试
-                    password={'S9sbd9gMXXghlX6u'}
+                    password="S9sbd9gMXXghlX6u"
                     style={{
                         width: '100vw',
                         height: '100vh',

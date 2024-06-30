@@ -83,10 +83,10 @@ export default function VncScreen(props: Props) {
             _rfb.resizeSession = resizeSession || true;
             // 缩放容器
             _rfb.scaleViewport = scaleViewport || true;
-            _rfb.showDotCursor = showDotCursor || false;
+            _rfb.showDotCursor = true;
             _rfb.background = background || '';
-            _rfb.qualityLevel = qualityLevel || 6;
-            _rfb.compressionLevel = compressionLevel || 2;
+            _rfb.qualityLevel = qualityLevel || 8;
+            _rfb.compressionLevel = compressionLevel || 8;
             setRfb(_rfb);
 
             _rfb.addEventListener('connect', () => {
