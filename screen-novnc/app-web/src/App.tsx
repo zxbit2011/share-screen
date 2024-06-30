@@ -63,12 +63,6 @@ function decrypt(encryptedText) {
 }
 
 export default (props): React.ReactNode => {
-    // 注册码激活
-    const encrypted = 'f180caa779ae99e7a0d27bcea4ad5d5d6982134a01a103553dac9dd4148e61b9'; // 从Node.js加密函数获得的加密数据
-    console.log('decrypted: ', decrypt(encrypted));
-
-
-    console.log(location)
     let host = location.host
 
     // 测试环境
