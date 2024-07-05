@@ -55,5 +55,8 @@
     "cross-env": "^7.0.3",
     "electron": "^31.1.0",
     "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "internal-ip": "^8.0.0"
   }
 }

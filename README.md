@@ -55,3 +55,11 @@ npm run package-win
 * APP或平板访问共享屏幕
 
 ![img7.png](imgs/img7.png)
+
+# 帧率
+[ultravnc]
+MaxCpuFramerate=30
+MaxFps=30
+
+[poll]
+MaxFPS=30

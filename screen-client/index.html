@@ -95,6 +95,20 @@
         #service-stop, #service-run {
             display: none;
         }
+
+        .service-address {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            font-size: 16px;
+        }
+        #ip{
+            background: #02893b;
+            font-size: 14px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -117,6 +131,7 @@
             <i class="fas fa-exclamation-triangle"></i>
             <span>软件未授权激活，无法使用！</span>
         </div>
+        <div class="service-address" onclick="copyText()">共享地址：<span title="点击复制" id="ip"></span></div>
     </div>
 </div>
 <script>
@@ -124,6 +139,17 @@
     let serviceStop = document.getElementById('service-stop')
     let onlineNumber = document.getElementById('online-number')
     let authorization = document.getElementById('authorization')
+    let ip = document.getElementById('ip')
+
+    ip.addEventListener('click', function () {
+        copyText();
+    });
+
+    setTimeout(async function () {
+        const response = await window.electron.ipcRenderer.invoke('get-local-lan-ip');
+        console.log('Received from main process:', response);
+        ip.innerText = `http://${response}:3003/web/`
+    }, 1000)
 
     checkServiceState()
 
@@ -165,6 +191,21 @@
                 checkServiceState()
             }, 1000)
         }
+    }
+
+    function copyText() {
+        // 获取元素内容
+        const text = document.getElementById('ip').innerText;
+        // 创建一个临时的输入框来存储文本
+        const input = document.createElement('input');
+        input.value = text;
+        // 将输入框添加到页面，但不显示
+        document.body.appendChild(input);
+        input.select(); // 选择输入框的内容
+        // 执行复制命令
+        document.execCommand('copy');
+        // 移除临时输入框
+        document.body.removeChild(input);
     }
 </script>
 </body>
