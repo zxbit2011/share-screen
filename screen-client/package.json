@@ -23,6 +23,7 @@
       "resources/vncproxy.exe"
     ],
     "files": [
+      "preload.js",
       "index.js",
       "app.ico",
       "index.html",

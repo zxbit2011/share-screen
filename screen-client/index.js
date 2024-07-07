@@ -69,7 +69,7 @@ function createWindow() {
     });
 
     // 创建托盘图标
-    tray = new Tray('app.ico');
+    tray = new Tray(path.join(__dirname, 'app.ico'));
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '打开',

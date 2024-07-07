@@ -145,11 +145,11 @@
         copyText();
     });
 
-    setTimeout(async function () {
+    setInterval(async function () {
         const response = await window.electron.ipcRenderer.invoke('get-local-lan-ip');
         console.log('Received from main process:', response);
         ip.innerText = `http://${response}:3003/web/`
-    }, 1000)
+    }, 3000)
 
     checkServiceState()
 
