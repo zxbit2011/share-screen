@@ -55,6 +55,8 @@ var onlineCountMutex sync.Mutex
 func (p *Proxy) ServeWS(ws *websocket.Conn) {
 	p.logger.Debugf("ServeWS")
 	ws.PayloadType = websocket.BinaryFrame
+	// Increase buffer size
+	ws.MaxPayloadBytes = 8192 // Increase buffer size as needed
 
 	r := ws.Request()
 	p.logger.Debugf("request url: %v", r.URL)

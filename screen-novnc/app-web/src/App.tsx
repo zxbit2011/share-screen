@@ -168,8 +168,8 @@ export default (props): React.ReactNode => {
 
                 <VncScreen
                     className="screen"
-                    url={`ws://${host}/ws`}
-                    // url={`ws://${host}/socket/ws`} // vite 运行测试
+                    url={`ws://192.168.0.117:9000/websockify`}
+                    // url={`ws://${host}/socket/websockify`} // vite 运行测试
                     password="S9sbd9gMXXghlX6u"
                     style={{
                         width: '100vw',
