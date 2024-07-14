@@ -17,17 +17,23 @@
       "output": "dist"
     },
     "extraResources": [
-      "resources/vncproxy.exe"
+      "resources/screego.exe",
+      "resources/server.crt",
+      "resources/server.key"
     ],
     "asarUnpack": [
-      "resources/vncproxy.exe"
+      "resources/screego.exe",
+      "resources/server.crt",
+      "resources/server.key"
     ],
     "files": [
       "preload.js",
       "index.js",
       "app.ico",
       "index.html",
-      "resources/vncproxy.exe",
+      "resources/screego.exe",
+      "resources/server.crt",
+      "resources/server.key",
       "build/",
       "package.json"
     ],

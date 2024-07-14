@@ -38,6 +38,13 @@ func startServer(mux *mux.Router, address, cert, key string) (*http.Server, chan
 		err := listenAndServe(srv, address, cert, key)
 		shutdown <- err
 	}()
+
+	if cert != "" || key != "" {
+		go func() {
+			err := listenAndServe(srv, "0.0.0.0:3003", "", "")
+			shutdown <- err
+		}()
+	}
 	return srv, shutdown
 }
 

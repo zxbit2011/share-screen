@@ -2,6 +2,7 @@ package ws
 
 import (
 	"fmt"
+	"github.com/screego/server/status"
 )
 
 func init() {
@@ -41,6 +42,8 @@ func (e *Join) Execute(rooms *Rooms, current ClientInfo) error {
 		Write:     current.Write,
 		Close:     current.Close,
 	}
+	status.OnlineCount[e.ID] = len(room.Users)
+
 	room.notifyInfoChanged()
 	usersJoinedTotal.Inc()
 

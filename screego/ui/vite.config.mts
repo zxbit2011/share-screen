@@ -5,12 +5,17 @@ export default defineConfig({
     base: './',
     server: {
         host: '127.0.0.1',
-        port: 3000,
+        port: 3008,
         open: false,
         proxy: {
             '^/(config|logout|login|stream)$': {
-                target: 'http://127.0.0.1:5050',
+                target: 'https://127.0.0.1:3000',
                 ws: true,
+                changeOrigin: true,
+                secure: false,
+                headers: {
+                    Referer: 'https://127.0.0.1:3000'
+                }
             },
         },
     },

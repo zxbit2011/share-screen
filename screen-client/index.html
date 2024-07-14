@@ -100,7 +100,7 @@
             position: absolute;
             top: 50px;
             right: 20px;
-            font-size: 16px;
+            font-size: 12px;
         }
         #ip{
             background: #02893b;
@@ -108,6 +108,10 @@
             padding: 3px 10px;
             border-radius: 15px;
             cursor: pointer;
+        }
+
+        #authorization{
+            display: none;
         }
     </style>
 </head>
@@ -121,7 +125,7 @@
             <div>
                 <div class="loader"></div>
             </div>
-            <div class="service-state-text">服务正在运行中，当前在线用：<b id="online-number">0</b>个</div>
+            <div class="service-state-text">服务正在运行中，当前在线用户：<b id="online-number">0</b>个</div>
         </div>
         <div id="service-stop" class="warning">
             <i class="fas fa-exclamation-triangle"></i>
@@ -148,7 +152,7 @@
     setInterval(async function () {
         const response = await window.electron.ipcRenderer.invoke('get-local-lan-ip');
         console.log('Received from main process:', response);
-        ip.innerText = `http://${response}:3003/web/`
+        ip.innerText = `https://${response}:3000/?room=XW-WICX&t=manage&create=true`
     }, 3000)
 
     checkServiceState()
@@ -172,11 +176,11 @@
             serviceRun.style.display = 'block';
             serviceStop.style.display = 'none';
             const responseData = await response.json();
-            if (responseData.code !== 200) {
+           /* if (responseData.code !== 200) {
                 authorization.style.display = 'block';
             } else {
                 authorization.style.display = 'none';
-            }
+            }*/
             onlineNumber.innerText = responseData.onlineCount || 0;
             // console.log('Server response:', responseData);
             setTimeout(function () {

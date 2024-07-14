@@ -5,14 +5,14 @@ const path = require('path');
 let externalProcess;
 let tray = null
 
-// 检查并结束 vncproxy.exe 进程的函数
+// 检查并结束 screego.exe 进程的函数
 function killVNCProxy() {
-    exec('taskkill /F /IM vncproxy.exe', (err, stdout, stderr) => {
+    exec('taskkill /F /IM screego.exe', (err, stdout, stderr) => {
         if (err) {
-            console.error('Error killing vncproxy.exe:', err);
+            console.error('Error killing screego.exe:', err);
             return;
         }
-        console.log('vncproxy.exe killed successfully:', stdout);
+        console.log('screego.exe killed successfully:', stdout);
     });
 }
 
@@ -20,16 +20,19 @@ function killVNCProxy() {
 function createWindow() {
     killVNCProxy()
 
-// 获取应用程序的安装路径
+    // 获取应用程序的安装路径
     let exePath = null;
-// 在开发环境中，可能会有不同的路径结构
+    // 在开发环境中，可能会有不同的路径结构
     if (process.env.NODE_ENV === 'development') {
         console.log('1')
-        exePath = path.join(__dirname, 'resources', 'vncproxy.exe');
+        exePath = path.join(__dirname, 'resources', 'screego.exe');
     } else {
         console.log('2')
-        exePath = path.join(process.cwd(), 'resources', 'resources', 'vncproxy.exe');
+        exePath = path.join(process.cwd(), 'resources', 'resources', 'screego.exe');
     }
+
+
+
     console.log(exePath)
     /*dialog.showMessageBox({
         type: 'warning',
@@ -45,7 +48,7 @@ function createWindow() {
 
     const mainWindow = new BrowserWindow({
         icon: 'app.ico',
-        width: 800,
+        width: 900,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -99,17 +102,17 @@ function createWindow() {
     // 弹出一个简单的警告框
 
     setTimeout(function () {
-        externalProcess = spawn(exePath, [], {
+        externalProcess = spawn(exePath, ['serve'], {
             detached: true,
             stdio: 'ignore'
         });
         externalProcess.unref();
     }, 500)
 
-    f()
+    getLocalLanIp()
 }
 
-async function f() {
+async function getLocalLanIp() {
     ipcMain.handle('get-local-lan-ip', async () => {
         console.log('get-local-lan-ip')
 

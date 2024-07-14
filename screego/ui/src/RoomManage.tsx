@@ -90,8 +90,8 @@ export const RoomManage = ({room, config}: { room: FCreateRoom; config: UseConfi
         >
             <Grid item xs={12}>
                 <Typography align="center" gutterBottom>
-                    <div><img src="./logo.svg" style={{width: 100}} alt="logo"/></div>
-                    <h3>XW-WICX</h3>
+                    <div><img src="./logo.svg" style={{width: 80}} alt="logo"/></div>
+                    <h4>XW-WICX</h4>
                 </Typography>
 
                 {isManage ?

@@ -1,15 +1,7 @@
 import {useSnackbar} from 'notistack';
 import React from 'react';
 
-import {
-    ICEServer,
-    IncomingMessage,
-    JoinRoom,
-    OutgoingMessage,
-    RoomCreate,
-    RoomInfo,
-    UIConfig,
-} from './message';
+import {ICEServer, IncomingMessage, JoinRoom, OutgoingMessage, RoomCreate, RoomInfo, UIConfig,} from './message';
 import {loadSettings, resolveCodecPlaceholder} from './settings';
 import {urlWithSlash} from './url';
 import {authModeToRoomMode} from './useConfig';
@@ -40,12 +32,12 @@ const relayConfig: Partial<RTCConfiguration> =
     window.location.search.indexOf('forceTurn=true') !== -1 ? {iceTransportPolicy: 'relay'} : {};
 
 const hostSession = async ({
-    sid,
-    ice,
-    send,
-    done,
-    stream,
-}: {
+                               sid,
+                               ice,
+                               send,
+                               done,
+                               stream,
+                           }: {
     sid: string;
     ice: ICEServer[];
     send: (e: OutgoingMessage) => void;
@@ -112,12 +104,12 @@ const hostSession = async ({
 };
 
 const clientSession = async ({
-    sid,
-    ice,
-    send,
-    done,
-    onTrack,
-}: {
+                                 sid,
+                                 ice,
+                                 send,
+                                 done,
+                                 onTrack,
+                             }: {
     sid: string;
     ice: ICEServer[];
     send: (e: OutgoingMessage) => void;
@@ -163,6 +155,9 @@ export const useRoom = (config: UIConfig): UseRoom => {
     const stream = React.useRef<MediaStream>();
 
     const [state, setState] = React.useState<RoomState>(false);
+    const [jsonRetry, setJsonRetry] = React.useState(false);
+
+    let jsonRetryTime = null;
 
     const room: FCreateRoom = React.useCallback(
         (create) => {
@@ -182,6 +177,10 @@ export const useRoom = (config: UIConfig): UseRoom => {
                             resolve();
                             setState({ws, ...event.payload, clientStreams: []});
                             setRoomID(event.payload.id);
+                            setJsonRetry(false)
+                            if (jsonRetryTime) {
+                                clearInterval(jsonRetryTime)
+                            }
                         } else {
                             resolve();
                             enqueueSnackbar('Unknown Event: ' + event.type, {variant: 'error'});
@@ -221,11 +220,11 @@ export const useRoom = (config: UIConfig): UseRoom => {
                                     setState((current) =>
                                         current
                                             ? {
-                                                  ...current,
-                                                  clientStreams: current.clientStreams.filter(
-                                                      ({id}) => id !== sid
-                                                  ),
-                                              }
+                                                ...current,
+                                                clientStreams: current.clientStreams.filter(
+                                                    ({id}) => id !== sid
+                                                ),
+                                            }
                                             : current
                                     );
                                 },
@@ -233,16 +232,16 @@ export const useRoom = (config: UIConfig): UseRoom => {
                                     setState((current) =>
                                         current
                                             ? {
-                                                  ...current,
-                                                  clientStreams: [
-                                                      ...current.clientStreams,
-                                                      {
-                                                          id: sid,
-                                                          stream,
-                                                          peer_id: peer,
-                                                      },
-                                                  ],
-                                              }
+                                                ...current,
+                                                clientStreams: [
+                                                    ...current.clientStreams,
+                                                    {
+                                                        id: sid,
+                                                        stream,
+                                                        peer_id: peer,
+                                                    },
+                                                ],
+                                            }
                                             : current
                                     ),
                             }).then((peer) => (client.current[event.payload.id] = peer));
@@ -280,28 +279,30 @@ export const useRoom = (config: UIConfig): UseRoom => {
                             setState((current) =>
                                 current
                                     ? {
-                                          ...current,
-                                          clientStreams: current.clientStreams.filter(
-                                              ({id}) => id !== event.payload
-                                          ),
-                                      }
+                                        ...current,
+                                        clientStreams: current.clientStreams.filter(
+                                            ({id}) => id !== event.payload
+                                        ),
+                                    }
                                     : current
                             );
                     }
                 };
                 ws.onclose = (event) => {
+                    console.log('onclose', event)
                     if (first) {
                         resolve(event.reason);
                         first = false;
                     }
-
-                    if(event.reason.indexOf('未共享投屏')===-1) {
+                    if (event.reason.indexOf('未共享投屏') === -1 && event.reason.indexOf('已关闭共享') === -1) {
                         enqueueSnackbar(event.reason, {variant: 'error', persist: true});
+                    } else {
+                        setJsonRetry(true)
                     }
                     setState(false);
                 };
                 ws.onerror = (err) => {
-                    console.log('onerror',err)
+                    console.log('onerror', err)
                     if (first) {
                         resolve();
                         first = false;
@@ -354,15 +355,30 @@ export const useRoom = (config: UIConfig): UseRoom => {
     };
 
     const joinRoom = function () {
-        room({type: 'join', payload: {id: roomID}}).then(res=>{
-            console.log('room res',res)
-            if(res && (res+'').indexOf('未共享投屏')>-1){
+        room({type: 'join', payload: {id: roomID}}).then(res => {
+            /*let msg = res + ''
+            console.log('room msg', msg)
+            if (res && (msg.indexOf('未共享投屏') > -1 || msg.indexOf('已关闭共享') > -1)) {
                 setTimeout(function () {
                     joinRoom()
-                },100)
-            }
+                }, 1000)
+            }*/
         });
     }
+
+
+    React.useEffect(() => {
+        console.log('状态变化', jsonRetry)
+        if (jsonRetry && !jsonRetryTime) {
+            // jsonRetryTime = setInterval(function () {
+            //     joinRoom()
+            // }, 1000)
+            setTimeout(function () {
+                setJsonRetry(false)
+                joinRoom()
+            }, 1000)
+        }
+    }, [jsonRetry])
 
     React.useEffect(() => {
         if (roomID) {
@@ -373,6 +389,8 @@ export const useRoom = (config: UIConfig): UseRoom => {
                     closeOnOwnerLeaveString === undefined
                         ? config.closeRoomWhenOwnerLeaves
                         : closeOnOwnerLeaveString === 'true';
+
+                console.log('创建房间')
                 room({
                     type: 'create',
                     payload: {

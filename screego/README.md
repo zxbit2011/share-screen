@@ -1,7 +1,17 @@
 管理员创建房间：
-http://localhost:3000/?room=bright-red-horse&t=manage&create=true
+http://localhost:3008/?room=bright-red-horse&t=manage&create=true
+https://192.168.0.117:3000/?room=XW-WICX&t=manage&create=true
 
 
+# 编译
+````
+go build -ldflags "-X main.version=1.0.0 -X main.mode=prod" -o screego.exe ./main.go
+````
+
+# 运行
+````
+screego.exe serve
+````
 
 <p align="center">
     <a href="https://screego.net">

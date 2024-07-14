@@ -2,6 +2,7 @@ package ws
 
 import (
 	"bytes"
+	"github.com/screego/server/status"
 
 	"github.com/screego/server/ws/outgoing"
 )
@@ -28,6 +29,7 @@ func (e *Disconnected) Execute(rooms *Rooms, current ClientInfo) error {
 
 	current.Close <- CloseDone
 	delete(room.Users, current.ID)
+	status.OnlineCount[current.RoomID] = len(room.Users)
 	usersLeftTotal.Inc()
 
 	for id, session := range room.Sessions {
