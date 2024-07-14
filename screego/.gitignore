@@ -3,3 +3,4 @@
 *-packr.go
 /dist/
 *.local
+/screego.exe
