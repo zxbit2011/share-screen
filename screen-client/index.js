@@ -1,6 +1,30 @@
-const {app, BrowserWindow, Tray, Menu, ipcMain} = require('electron');
+const {app, BrowserWindow, Tray, Menu, ipcMain, dialog} = require('electron');
 const {spawn, exec} = require('child_process');
 const path = require('path');
+const os = require('os')
+// 引入 electron-log
+const log = require('electron-log');
+
+// 关闭控制台打印
+// log.transports.console.level = false
+log.transports.file.level = 'debug'
+log.transports.file.maxSize = 10024300 // 文件最大不超过 10M
+// 输出格式
+log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}'
+let date = new Date()
+let dateStr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+// 文件位置及命名方式
+// 默认位置为：C:\Users\[user]\AppData\Roaming\[appname]\electron_log\
+// 文件名为：年-月-日.log
+// 自定义文件保存位置为安装目录下 \log\年-月-日.log
+log.transports.file.resolvePath = () => 'log\\' + dateStr + '.log';
+
+// 重定向 console 输出到日志库
+console.log = log.info;
+console.error = log.error;
+console.warn = log.warn;
+
+console.log('测试日志')
 
 let externalProcess;
 let tray = null
@@ -25,12 +49,13 @@ function createWindow() {
     // 在开发环境中，可能会有不同的路径结构
     if (process.env.NODE_ENV === 'development') {
         console.log('1')
-        exePath = path.join(__dirname, 'resources', 'screego.exe');
+        // exePath = path.join(__dirname, 'resources', 'screego.exe');
+        exePath = path.join(__dirname, 'resources');
     } else {
         console.log('2')
-        exePath = path.join(process.cwd(), 'resources', 'resources', 'screego.exe');
+        // exePath = path.join(process.cwd(), 'resources', 'resources', 'screego.exe');
+        exePath = path.join(process.cwd(), 'resources', 'resources');
     }
-
 
 
     console.log(exePath)
@@ -102,30 +127,65 @@ function createWindow() {
     // 弹出一个简单的警告框
 
     setTimeout(function () {
-        externalProcess = spawn(exePath, ['serve'], {
-            detached: true,
-            stdio: 'ignore'
+
+        const command = 'cmd.exe'; // Windows 环境下的命令行
+        const args = ['/c', 'screego.exe', 'serve'];
+        externalProcess = spawn(command, args, {
+            // detached: true,
+            stdio: 'ignore',
+            cwd: exePath, // 指定工作目录
+            shell: true, // 使用 shell 执行命令
         });
+        /*// 捕获子进程的标准输出
+        externalProcess.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
+            dialog.showMessageBox({
+                type: 'warning',
+                title: '执行文件路径',
+                message: `stdout: ${data}`,
+                buttons: ['OK']
+            }).then((result) => {
+                console.log(result);
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+
+        // 捕获子进程的标准错误输出
+        externalProcess.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+            dialog.showMessageBox({
+                type: 'warning',
+                title: '执行文件路径',
+                message: `stderr: ${data}`,
+                buttons: ['OK']
+            }).then((result) => {
+                console.log(result);
+            }).catch((err) => {
+                console.log(err);
+            });
+        });*/
+
         externalProcess.unref();
-    }, 500)
+    }, 1500)
 
     getLocalLanIp()
 }
 
 async function getLocalLanIp() {
     ipcMain.handle('get-local-lan-ip', async () => {
-        console.log('get-local-lan-ip')
+        // console.log('get-local-lan-ip')
 
-        const { internalIpV4 } = await import('internal-ip');
+        /*const {internalIpV4} = await import('internal-ip');
         let ip = await internalIpV4();
-        console.log('ip', ip);
+        // console.log('ip', ip);
         // If ip is '192.168.0.0', log network interfaces
         if (ip === '192.168.0.0') {
             const os = require('os');
 
             // Get all network interfaces
             const interfaces = os.networkInterfaces();
-            console.log('Network Interfaces:', interfaces);
+            // console.log('Network Interfaces:', interfaces);
 
             // Find the IPv4 address (assuming you want IPv4)
             for (const key in interfaces) {
@@ -138,8 +198,24 @@ async function getLocalLanIp() {
                 if (ip) break;
             }
         }
-        return ip;
+        return ip;*/
+
+         return getLocalIP()
     });
+}
+
+function getLocalIP() {
+    const ifaces = os.networkInterfaces();
+    let ip = '';
+    for (let dev in ifaces) {
+        for (let i = 0; i < ifaces[dev].length; i++) {
+            if (!ifaces[dev][i].internal && ifaces[dev][i].family === 'IPv4' && !ifaces[dev][i].address.includes('::') && ifaces[dev][i].address !== '127.0.0.1') {
+                ip = ifaces[dev][i].address;
+                break;
+            }
+        }
+    }
+    return ip;
 }
 
 app.on('ready', createWindow);

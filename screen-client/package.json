@@ -19,12 +19,16 @@
     "extraResources": [
       "resources/screego.exe",
       "resources/server.crt",
-      "resources/server.key"
+      "resources/server.key",
+      "resources/screego.config",
+      "resources/users"
     ],
     "asarUnpack": [
       "resources/screego.exe",
       "resources/server.crt",
-      "resources/server.key"
+      "resources/server.key",
+      "resources/screego.config",
+      "resources/users"
     ],
     "files": [
       "preload.js",
@@ -34,6 +38,11 @@
       "resources/screego.exe",
       "resources/server.crt",
       "resources/server.key",
+      "resources/screego.config",
+      "resources/users",
+      "users",
+      "server.crt",
+      "server.key",
       "build/",
       "package.json"
     ],
@@ -64,6 +73,7 @@
     "electron-builder": "^24.13.3"
   },
   "dependencies": {
+    "electron-log": "^5.1.5",
     "internal-ip": "^8.0.0"
   }
 }

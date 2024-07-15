@@ -96,7 +96,6 @@ func Router(conf config.Config, rooms *ws.Rooms, users *auth.Users, version stri
 	})
 	router.Methods("POST").Path("/api/getRegCode").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		keyPath := getFileKeyPath()
-		println(keyPath)
 		key, err := os.ReadFile(keyPath)
 		if err != nil {
 			JSONResponse(w, http.StatusOK, map[string]interface{}{

@@ -102,7 +102,7 @@ export const Room = ({
     }, [videoElement, stream]);
 
     const copyLink = () => {
-        navigator?.clipboard?.writeText(window.location.href)?.then(
+        navigator?.clipboard?.writeText(window.location.href.replace('&t=manage&create=true',''))?.then(
             () => enqueueSnackbar('Link Copied', {variant: 'success'}),
             (err) => enqueueSnackbar('Copy Failed ' + err, {variant: 'error'})
         );
