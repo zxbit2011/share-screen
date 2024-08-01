@@ -111,7 +111,7 @@
         </div>
         <div id="service-stop" class="warning">
             <i class="fas fa-exclamation-triangle"></i>
-            <span>服务已停止，请尝试重新启动！</span>
+            <span>未授权或服务已停止，请尝试重新启动！</span>
         </div>
     </div>
 </div>
@@ -124,8 +124,8 @@
 
     async function checkServiceState() {
         try {
-            const response = await fetch('http://127.0.0.1:3003/api/getRegCode', {
-                method: 'POST',
+            const response = await fetch('http://127.0.0.1:3003/getRegCode', {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },

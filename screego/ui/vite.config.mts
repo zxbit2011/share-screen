@@ -8,7 +8,7 @@ export default defineConfig({
         port: 3008,
         open: false,
         proxy: {
-            '^/(config|logout|login|stream)$': {
+            '^/(config|logout|login|stream|getRegCode|saveRegCode)$': {
                 target: 'https://127.0.0.1:3000',
                 ws: true,
                 changeOrigin: true,

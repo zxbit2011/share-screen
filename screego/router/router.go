@@ -65,8 +65,8 @@ func Router(conf config.Config, rooms *ws.Rooms, users *auth.Users, version stri
 		})
 	})
 
-	router.Methods("POST").Path("/api/saveRegCode").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		key := r.URL.Query().Get("key")
+	router.Methods("POST").Path("/saveRegCode").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		key := r.Header.Get("Auth-Key")
 		if key == "" {
 			JSONResponse(w, http.StatusOK, map[string]interface{}{
 				"code":    400,
@@ -94,7 +94,7 @@ func Router(conf config.Config, rooms *ws.Rooms, users *auth.Users, version stri
 			return
 		}
 	})
-	router.Methods("POST").Path("/api/getRegCode").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	router.Methods("GET").Path("/getRegCode").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		keyPath := getFileKeyPath()
 		key, err := os.ReadFile(keyPath)
 		if err != nil {
